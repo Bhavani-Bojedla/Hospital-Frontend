@@ -13,8 +13,8 @@ export default {
 
       },
       backgroundImage: {
-        'login': "url('./src/assets/login.svg')",
-        'addrecord':"url(./src/assets/addrecord.svg)"
+        'login': "url('../Images/login.svg')",
+        'addrecord':"url(../Images/addrecord.svg)"
       },
       spacing:{
         22:'5.5rem',
