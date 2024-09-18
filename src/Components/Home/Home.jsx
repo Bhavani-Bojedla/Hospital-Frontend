@@ -51,7 +51,8 @@ const Home = () => {
         </Link>
       </div>
       <div className='w-1/2 pl-10'>
-        <div className='bg-cover h-90 w-98 bg-home animate-fadeInImage'></div>
+        <div className='bg-cover h-90 w-98 bg-home'></div>
+        {/* // animate-fadeInImage */}
       </div>
     </div>
   );
