@@ -23,6 +23,7 @@ This is a React-based Health Tracking Application designed to help users monitor
   - [Home Page](#Home-page)
   - [Add Record Page](#Add-record-page)
   - [Health Metrics Dashboard](#health-metrics-dashboard)
+  - [Record Detail](#Record-Detail-page)
 
 
 ## Installation and Setup
@@ -84,6 +85,11 @@ To run this project locally, follow these steps:
 - **Path:** `/dashboard`
 - **Description:** Displays a list of health records with options to view details or delete records. Includes search and filter functionality for records.
 
+### Record-Detail-page
+
+- **Path:** `/record/:id`
+- **Description:** Displays a record with options to edit or delete record. 
+
 ## Search and Filtering
 
 - **Search Functionality:** Allows users to search for records based on the date or filter by health metrics (e.g., heart rate above a certain threshold). The search updates automatically as users type.
@@ -94,7 +100,7 @@ To run this project locally, follow these steps:
 
 ## Styling
 
-- **Tailwind CSS:** Utilized for styling components with a responsive design approach. Utility classes handle different screen sizes and layout adjustments.
+- **Tailwind CSS:** Utilized for styling components and Utility classes handle different layout adjustments.
 
 ## Contact
 
