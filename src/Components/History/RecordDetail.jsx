@@ -142,26 +142,30 @@ const RecordDetail = () => {
       try {
         const response = await axios.get(`https://hospital-backend-4rvm.onrender.com/record/getrecord/${id}`);
         if (response.data.record) {
+          const { Date, temparature, pressure, rate } = response.data.record;
+          // Format date to yyyy-MM-dd
+          const formattedDate = new Date(Date).toISOString().split('T')[0];
           setRecord(response.data.record);
           setFormData({
-            Date: response.data.record.Date,
-            temparature: response.data.record.temparature,
-            pressure: response.data.record.pressure,
-            rate: response.data.record.rate
+            Date: formattedDate,
+            temparature,
+            pressure,
+            rate
           });
         } else {
           setError("No record found");
         }
       } catch (error) {
-        console.error("Failed to fetch record:", error);
-        setError("Failed to fetch record");
+        console.error("Failed to fetch record:", error.response ? error.response.data : error.message);
+        setError("Failed to fetch record. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchRecord();
   }, [id]);
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -172,15 +176,20 @@ const RecordDetail = () => {
     e.preventDefault();
     setIsSaving(true);
     try {
-      await axios.put(`https://hospital-backend-4rvm.onrender.com/record/updaterecord/${id}`, formData);
-      setRecord(formData); // Update the record with new values
-      setShowEditModal(false); // Close the edit modal
+      await axios.put(`https://hospital-backend-4rvm.onrender.com/record/updaterecord/${id}`, {
+        ...formData,
+        Date: formData.Date // Assuming Date is already in yyyy-MM-dd format
+      });
+      setRecord({ ...formData, Date: formData.Date });
+      setShowEditModal(false);
     } catch (error) {
-      console.error("Failed to update record:", error);
+      console.error("Failed to update record:", error.response ? error.response.data : error.message);
     } finally {
       setIsSaving(false);
     }
   };
+  
+  
 
   const handleDelete = async () => {
     try {
