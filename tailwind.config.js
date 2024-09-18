@@ -16,7 +16,7 @@ export default {
         'login': "url('../Images/login.svg')",
         'home':"url('../Images/home.svg')",
         'addrecord':"url(../Images/addrecord.svg)",
-        'logo':"url(./Images/logo.jpg)"
+        'logo':"url('../Images/logo.jpg')"
       },
       spacing:{
         22:'5.5rem',
