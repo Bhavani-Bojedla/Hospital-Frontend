@@ -1,109 +1,118 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
 
-const RecordEdit = ({ id, onRecordUpdate, onClose }) => {
-  const [formData, setFormData] = useState({
-    Date: '',
-    temparature: '',
-    pressure: '',
-    rate: ''
-  });
+const RecordEdit = ({ id, onClose }) => {
+  const [temparature, setTemparature] = useState('');
+  const [pressure, setPressure] = useState('');
+  const [rate, setRate] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
+  // Fetch record details
   useEffect(() => {
     const fetchRecord = async () => {
+      setLoading(true);
       try {
+        console.log(`Fetching record with ID: ${id}`);
         const response = await axios.get(`https://hospital-backend-4rvm.onrender.com/record/getrecord/${id}`);
-        if (response.data.record) {
-          setFormData({
-            Date: response.data.record.Date,
-            temparature: response.data.record.temparature,
-            pressure: response.data.record.pressure,
-            rate: response.data.record.rate
-          });
-        }
+        console.log('Fetched record:', response.data.record); // Log fetched data
+        const { temparature, pressure, rate } = response.data.record;
+        setTemparature(temparature);
+        setPressure(pressure);
+        setRate(rate);
       } catch (error) {
-        console.error("Failed to fetch record:", error);
+        console.error('Error fetching record:', error.response ? error.response.data : error.message);
+        setError('Failed to fetch record. Please try again later.');
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchRecord();
   }, [id]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = async (e) => {
+  // Save updated record details
+  const handleSave = async (e) => {
     e.preventDefault();
-    console.log("Submitting form with data:", formData); // Log form data before submission
-    setIsSaving(true);
+    setLoading(true);
+    console.log('Saving record...');
+
     try {
-      await axios.put(`https://hospital-backend-4rvm.onrender.com/record/updaterecord/${id}`, formData);
-      console.log("Record updated successfully");
-      onRecordUpdate(); // Trigger parent update
-      onClose(); // Close modal
+      const response = await axios.put(`https://hospital-backend-4rvm.onrender.com/record/updaterecord/${id}`, {
+        temparature,
+        pressure,
+        rate
+      });
+      console.log('Save successful:', response.data);
+      setLoading(false);
+      onClose(); // Close the modal after save
     } catch (error) {
-      console.error("Failed to update record:", error);
-    } finally {
-      setIsSaving(false);
-      console.log("isSaving reset to false");
+      console.error('Error saving record:', error.response ? error.response.data : error.message);
+      setError('Failed to save record. Please try again later.');
+      setLoading(false); // Ensure loading is turned off if there's an error
     }
   };
-  
+
+  if (loading) {
+    return <div className="py-8 text-center">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="py-8 text-center text-red-500">{error}</div>;
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 bg-white rounded-lg shadow-md">
-      <div className="mb-4">
-        <label htmlFor="Date" className="block mb-2 text-lg font-medium">Date</label>
-        <input
-          type="date"
-          id="Date"
-          name="Date"
-          value={formData.Date}
-          onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded"
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="temparature" className="block mb-2 text-lg font-medium">Body Temperature</label>
-        <input
-          type="number"
-          id="temparature"
-          name="temparature"
-          value={formData.temparature}
-          onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded"
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="pressure" className="block mb-2 text-lg font-medium">Blood Pressure</label>
-        <input
-          type="number"
-          id="pressure"
-          name="pressure"
-          value={formData.pressure}
-          onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded"
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="rate" className="block mb-2 text-lg font-medium">Heart Rate</label>
-        <input
-          type="number"
-          id="rate"
-          name="rate"
-          value={formData.rate}
-          onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded"
-        />
-      </div>
-      <div className="flex justify-end">
-        <button type="button" onClick={onClose} className="px-4 py-2 mr-2 text-white bg-gray-600 rounded hover:bg-gray-700">Cancel</button>
-        <button type="submit" className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">Save</button>
-      </div>
-    </form>
+    <div className="p-6 bg-white rounded-md shadow-lg">
+      <h2 className="mb-4 text-2xl font-bold">Edit Record</h2>
+      <form onSubmit={handleSave}>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Body Temperature (°C/°F)</label>
+          <input
+            type="number"
+            value={temparature}
+            onChange={(e) => setTemparature(e.target.value)}
+            className="block w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Blood Pressure</label>
+          <input
+            type="text"
+            value={pressure}
+            onChange={(e) => setPressure(e.target.value)}
+            className="block w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Heart Rate (bpm)</label>
+          <input
+            type="number"
+            value={rate}
+            onChange={(e) => setRate(e.target.value)}
+            className="block w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm"
+            required
+          />
+        </div>
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 mr-2 text-white bg-gray-600 rounded hover:bg-gray-700"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
+          >
+            {loading ? 'Saving...' : 'Save'}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 
