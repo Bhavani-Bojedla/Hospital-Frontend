@@ -1,0 +1,42 @@
+/* src/components/AuthWrapper.css */
+.auth-wrapper {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  .image-section {
+    background-image: url('/src/assets/login.svg'); /* Replace with your image */
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    transition: transform 0.7s ease-in-out; /* Smooth sliding */
+    z-index: -1;
+  }
+  
+  .image-section.signin {
+    transform: translateX(0); /* Default position for SignIn */
+  }
+  
+  .image-section.signup {
+    transform: translateX(-100%); /* Slide left for SignUp */
+  }
+  
+  .form-section {
+    width: 50%;
+    height: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  

@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .add{
+       @apply block mb-2 font-semibold text-gray-700
+    }
+    .input{
+        @apply w-full p-2 border border-gray-300 rounded
+    }
+    }
