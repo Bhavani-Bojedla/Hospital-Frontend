@@ -1,6 +1,7 @@
 // import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
 // import { useParams, useNavigate } from 'react-router-dom';
+// import RecordEdit from './RecordEdit'; // Import the RecordEdit component
 
 // const RecordDetail = () => {
 //   const { id } = useParams();
@@ -8,7 +9,9 @@
 //   const [record, setRecord] = useState(null);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState(null);
-//   const [showDeleteModal, setShowDeleteModal] = useState(false); // State for showing the delete confirmation modal
+//   const [showDeleteModal, setShowDeleteModal] = useState(false);
+//   const [showEditModal, setShowEditModal] = useState(false); 
+//   const [isRecordUpdated, setIsRecordUpdated] = useState(false); 
 
 //   useEffect(() => {
 //     const fetchRecord = async () => {
@@ -29,7 +32,7 @@
 //     };
 
 //     fetchRecord();
-//   }, [id]);
+//   }, [id, isRecordUpdated]); // Re-fetch when the record is updated
 
 //   const handleDelete = async () => {
 //     try {
@@ -38,6 +41,11 @@
 //     } catch (error) {
 //       console.error("Failed to delete record:", error);
 //     }
+//   };
+
+//   const handleRecordUpdate = () => {
+//     setIsRecordUpdated(true); // This will trigger the useEffect to fetch the updated record
+//     setShowEditModal(false); // Close the modal after updating
 //   };
 
 //   if (loading) {
@@ -63,7 +71,7 @@
 //           <p className="text-lg"><strong>Heart Rate:</strong> {record.rate} bpm</p>
 //           <div className="flex mt-4 space-x-4">
 //             <button
-//               onClick={() => navigate(`/record/update/${id}`)}
+//               onClick={() => setShowEditModal(true)} // Open the edit popup
 //               className="text-blue-500 hover:underline"
 //             >
 //               Edit
@@ -77,6 +85,14 @@
 //           </div>
 //         </div>
 //       </div>
+
+//       {showEditModal && (
+//         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={() => setShowEditModal(false)}>
+//           <div className="p-6 bg-white rounded-lg shadow-lg" onClick={(e) => e.stopPropagation()}>
+//             <RecordEdit id={id} onRecordUpdate={handleRecordUpdate} onClose={() => setShowEditModal(false)} />
+//           </div>
+//         </div>
+//       )}
 
 //       {showDeleteModal && (
 //         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={() => setShowDeleteModal(false)}>
@@ -99,11 +115,9 @@
 
 
 
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import RecordEdit from './RecordEdit'; // Import the RecordEdit component
 
 const RecordDetail = () => {
   const { id } = useParams();
@@ -112,9 +126,16 @@ const RecordDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false); // State to show/hide the Edit popup
-  const [isRecordUpdated, setIsRecordUpdated] = useState(false); // Track if the record was updated
+  const [showEditModal, setShowEditModal] = useState(false); 
+  const [isSaving, setIsSaving] = useState(false); // Track if the form is submitting
+  const [formData, setFormData] = useState({
+    Date: '',
+    temparature: '',
+    pressure: '',
+    rate: ''
+  });
 
+  // Fetch record details on load or when record is updated
   useEffect(() => {
     const fetchRecord = async () => {
       setLoading(true);
@@ -122,6 +143,12 @@ const RecordDetail = () => {
         const response = await axios.get(`https://hospital-backend-4rvm.onrender.com/record/getrecord/${id}`);
         if (response.data.record) {
           setRecord(response.data.record);
+          setFormData({
+            Date: response.data.record.Date,
+            temparature: response.data.record.temparature,
+            pressure: response.data.record.pressure,
+            rate: response.data.record.rate
+          });
         } else {
           setError("No record found");
         }
@@ -134,7 +161,26 @@ const RecordDetail = () => {
     };
 
     fetchRecord();
-  }, [id, isRecordUpdated]); // Re-fetch when the record is updated
+  }, [id]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSaving(true);
+    try {
+      await axios.put(`https://hospital-backend-4rvm.onrender.com/record/updaterecord/${id}`, formData);
+      setRecord(formData); // Update the record with new values
+      setShowEditModal(false); // Close the edit modal
+    } catch (error) {
+      console.error("Failed to update record:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleDelete = async () => {
     try {
@@ -143,11 +189,6 @@ const RecordDetail = () => {
     } catch (error) {
       console.error("Failed to delete record:", error);
     }
-  };
-
-  const handleRecordUpdate = () => {
-    setIsRecordUpdated(true); // This will trigger the useEffect to fetch the updated record
-    setShowEditModal(false); // Close the modal after updating
   };
 
   if (loading) {
@@ -191,7 +232,58 @@ const RecordDetail = () => {
       {showEditModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={() => setShowEditModal(false)}>
           <div className="p-6 bg-white rounded-lg shadow-lg" onClick={(e) => e.stopPropagation()}>
-            <RecordEdit id={id} onRecordUpdate={handleRecordUpdate} onClose={() => setShowEditModal(false)} />
+            <form onSubmit={handleSubmit} className="p-4 bg-white rounded-lg shadow-md">
+              <div className="mb-4">
+                <label htmlFor="Date" className="block mb-2 text-lg font-medium">Date</label>
+                <input
+                  type="date"
+                  id="Date"
+                  name="Date"
+                  value={formData.Date}
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="temparature" className="block mb-2 text-lg font-medium">Body Temperature</label>
+                <input
+                  type="number"
+                  id="temparature"
+                  name="temparature"
+                  value={formData.temparature}
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="pressure" className="block mb-2 text-lg font-medium">Blood Pressure</label>
+                <input
+                  type="number"
+                  id="pressure"
+                  name="pressure"
+                  value={formData.pressure}
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="rate" className="block mb-2 text-lg font-medium">Heart Rate</label>
+                <input
+                  type="number"
+                  id="rate"
+                  name="rate"
+                  value={formData.rate}
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+              </div>
+              <div className="flex justify-end">
+                <button type="button" onClick={() => setShowEditModal(false)} className="px-4 py-2 mr-2 text-white bg-gray-600 rounded hover:bg-gray-700">Cancel</button>
+                <button type="submit" className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600" disabled={isSaving}>
+                  {isSaving ? 'Saving...' : 'Save'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
