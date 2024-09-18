@@ -19,7 +19,7 @@ function App() {
       <BrowserRouter>
       <div>
         <Navbar /> 
-        <div className="">
+        <div className="h-screen bg-gray-100">
          <Routes>
          <Route path="/signin" element={<Signin />} />
             <Route path="/signup" element={<Signup />} />

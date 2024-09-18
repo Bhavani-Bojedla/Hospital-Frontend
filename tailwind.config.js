@@ -14,7 +14,9 @@ export default {
       },
       backgroundImage: {
         'login': "url('../Images/login.svg')",
-        'addrecord':"url(../Images/addrecord.svg)"
+        'home':"url('../Images/home.svg')",
+        'addrecord':"url(../Images/addrecord.svg)",
+        'logo':"url(../Images/logo.jpg)"
       },
       spacing:{
         22:'5.5rem',
@@ -22,9 +24,9 @@ export default {
         75:'19rem',
         85:'22rem',
         90:'25.5rem',
-        98:'29rem',
+        98:'31rem',
         100:'36rem',
-        110:'40rem',
+        110:'39rem',
         120:'44rem'
 
       },

@@ -18,7 +18,8 @@ const Navbar = () => {
   return (
     <nav className="p-3 px-10 bg-nav">
       <div className="container flex items-center justify-between mx-auto">      
-        <Link to="/" className="text-2xl font-bold text-white">Health Tracker</Link> 
+        <Link to="/" className="flex items-center text-2xl font-bold text-white">
+        <div className='w-10 h-10 mr-3 bg-cover rounded-full bg-logo'></div>Health Tracker</Link> 
         <div>
         <ul className="flex space-x-14 ">
           <li>
@@ -27,9 +28,9 @@ const Navbar = () => {
           <li>
             <Link to="/add-record" className="nav-buttons">Add Record</Link>
           </li>
-          <li>
+          {/* <li>
             <Link to="/profile" className="nav-buttons">Profile</Link>
-          </li>
+          </li> */}
           <li>
             <Link to="/history" className="nav-buttons">Dashboard</Link>
           </li>

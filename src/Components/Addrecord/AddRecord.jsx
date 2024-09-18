@@ -122,7 +122,7 @@ const AddRecord = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-1/3 p-2 font-medium text-white bg-black rounded hover:bg-blue-600"
+                className="w-1/3 p-2 font-medium text-white transition duration-300 bg-blue-500 rounded-lg shadow-lg hover:bg-blue-700"
               >
                 {loading ? "Loading..." : "Submit"}
               </button>
@@ -136,3 +136,6 @@ const AddRecord = () => {
 };
 
 export default AddRecord;
+
+
+
