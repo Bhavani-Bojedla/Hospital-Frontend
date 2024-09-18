@@ -14,7 +14,7 @@ export default {
       },
       backgroundImage: {
         'login': "url('../Images/login.svg')",
-        'home':"url('../Images/home.svg')",
+        'home':"url('../Images/Home.svg')",
         'addrecord':"url(../Images/addrecord.svg)",
         'logo':"url('../Images/logo.jpg')"
       },
