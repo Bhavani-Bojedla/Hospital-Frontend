@@ -41,7 +41,7 @@ const AddRecord = () => {
           rate: Number(inputs.rate),  
           id: id,  // Send the user id as part of the request
         });
-        setRecord([response.data.list, ...record]);
+        setRecord([response.data.record, ...record]);
         toast.success("Your record has been added successfully!");
       } catch (error) {
         toast.error("Failed to add the record. Please try again.");
