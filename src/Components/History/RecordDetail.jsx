@@ -122,7 +122,7 @@ const RecordDetail = () => {
                 <label className="block text-sm font-medium text-gray-700">Date</label>
                 <input
                   type="date"
-                  name="date"
+                  name="Date"
                   value={formatDateForInput(record.Date)}
                   onChange={handleChange}
                   className="block w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm"
