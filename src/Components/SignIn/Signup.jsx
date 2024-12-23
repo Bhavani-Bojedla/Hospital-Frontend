@@ -19,7 +19,7 @@ const Signup = () => {
       let inputObj = { Username, Email, Password };
       console.log(inputObj);
       
-      let url = "https://hospital-backend-4rvm.onrender.com/users/createuser";
+      let url = "https://hospital-backend-issx.vercel.app/users/createuser";
       axios.post(url, inputObj)
         .then((res) => {
           if (res.status === 200) {

@@ -34,7 +34,7 @@ const AddRecord = () => {
     if (id) {
       setLoading(true);
       try {
-        const response = await axios.post("https://hospital-backend-4rvm.onrender.com/record/createrecord", {
+        const response = await axios.post("https://hospital-backend-issx.vercel.app/record/createrecord", {
           Date: inputs.Date,
           temparature: Number(inputs.temparature),  // Ensure it's sent as a number
           pressure: Number(inputs.pressure),  

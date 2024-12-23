@@ -36,7 +36,7 @@ const History = () => {
       const fetchRecords = async () => {
         setLoading(true);
         try {
-          const response = await axios.get(`https://hospital-backend-4rvm.onrender.com/record/getrecorduser/${id}`);
+          const response = await axios.get(`https://hospital-backend-issx.vercel.app/record/getrecorduser/${id}`);
           setRecords(response.data.records || []);
         } catch (error) {
           toast.error("Failed to fetch records.");
@@ -54,16 +54,17 @@ const History = () => {
     const searchTerm = searchQuery.toLowerCase();
     const filtered = records.filter(record => {
       const matchesDate = record.Date.toLowerCase().includes(searchTerm);
-      const matchesHeartRate = heartRateFilter ? record.rate > heartRateFilter : true;
-      return matchesDate && matchesHeartRate;
+      // const matchesHeartRate = heartRateFilter ? record.rate > heartRateFilter : true;
+      // return matchesDate && matchesHeartRate;
+      return matchesDate ;
     });
     setFilteredRecords(filtered);
-  }, [searchQuery, heartRateFilter, records]);
+  }, [searchQuery, records]);
 
   const handleDeleteRecord = async () => {
     if (id && deleteRecordId) {
       try {
-        await axios.delete(`https://hospital-backend-4rvm.onrender.com/record/deleterecord/${deleteRecordId}`, {
+        await axios.delete(`https://hospital-backend-issx.vercel.app/record/deleterecord/${deleteRecordId}`, {
           data: { id: id },
         });
         setRecords(records.filter((record) => record._id !== deleteRecordId));

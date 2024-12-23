@@ -16,7 +16,7 @@ const RecordDetail = () => {
     const fetchRecord = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`https://hospital-backend-4rvm.onrender.com/record/getrecord/${id}`);
+        const response = await axios.get(`https://hospital-backend-issx.vercel.app/record/getrecord/${id}`);
         if (response.data.record) {
           setRecord(response.data.record);
         } else {
@@ -35,7 +35,7 @@ const RecordDetail = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`https://hospital-backend-4rvm.onrender.com/record/deleterecord/${id}`);
+      await axios.delete(`https://hospital-backend-issx.vercel.app/record/deleterecord/${id}`);
       toast.success("Record deleted successfully!");
       navigate("/history");
     } catch (error) {
@@ -48,7 +48,7 @@ const RecordDetail = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.put(`https://hospital-backend-4rvm.onrender.com/record/updaterecord/${id}`, record);
+      await axios.put(`https://hospital-backend-issx.vercel.app/record/updaterecord/${id}`, record);
       setShowEditModal(false);
       toast.success("Record updated successfully!");
     } catch (error) {

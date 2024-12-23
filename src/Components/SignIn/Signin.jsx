@@ -25,7 +25,7 @@ const SignIn = () => {
     let inputObj = { Email, Password };
     console.log(inputObj);
 
-    let url = "https://hospital-backend-4rvm.onrender.com/users/checkuser";
+    let url = "https://hospital-backend-issx.vercel.app/users/checkuser";
     axios.post(url, inputObj)
       .then((res) => {
         if (res.status === 200) {
